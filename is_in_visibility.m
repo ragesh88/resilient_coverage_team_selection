@@ -1,8 +1,8 @@
 % function: check if a pos (x,y) is inside a sensor's visibility region
 % because of the blocking from obstacles
-function is_in_vis = is_in_visibility(pos, sensor)
+function is_in_vis = is_in_visibility(pos, sensor, sen_range)
     
-    global obs_1 obs_2 obs_3 sen_range
+    global obs_1 obs_2 obs_3
 
     is_in_vis = false;
     

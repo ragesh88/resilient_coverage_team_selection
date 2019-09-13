@@ -1,5 +1,5 @@
 % function: to determine if the pos is in the obstacle
-function in_obs = is_in_obstacle(x,y)
+function in_obs = is_in_obstacle(x,y)    
     global obs_1x_min obs_1x_max obs_1y_min obs_1y_max...
     obs_2x_min obs_2x_max obs_2y_min obs_2y_max...
     obs_3x_min obs_3x_max obs_3y_min obs_3y_max
@@ -16,4 +16,5 @@ function in_obs = is_in_obstacle(x,y)
     else
         in_obs = false; 
     end
+    in_obs = false;
 end
