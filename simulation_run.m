@@ -14,7 +14,8 @@ A_n = 50;
 Rob_pool = ones(A_n,1);
 
 % tuning parameter
-omega = 2;
+omega = 2; % hoops
+radius_tune = 15; % radius to consider for tuning
 coverage_thres = 120;
 
 % realiability parameters
@@ -53,7 +54,7 @@ env_y = env_min_y:delta:env_max_y;
 
 % area covered by each robot
 max_area = 200;
-Rob_areas = max_area * MTTFs/max(MTTFs);
+Rob_areas = max_area * ones(A_n,1);
 % sensing radius of the robots
 Rob_sen_rads = sqrt(Rob_areas/pi);
 % sensing parameter 
@@ -105,9 +106,9 @@ for i = 1:length(Rob_sel_labels)
         % compute the distance between the robots 
         dist = norm(set_gre(i,:) - set_gre(j,:));
         % communication radius sum
-        sum_com = Rob_sen_rads(Rob_sel_labels(i)) + ...
-            Rob_sen_rads(Rob_sel_labels(i));
-        if dist <= sum_com
+        max_com = max(Rob_sen_rads(Rob_sel_labels(i)),  ...
+            Rob_sen_rads(Rob_sel_labels(i)));
+        if dist <= max_com
             adj(i,j) = dist;
             adj(j,i) = dist;            
         end
@@ -122,45 +123,59 @@ plots(set_gre, prob_pos_gre, b_box, delta, adj_u,Rob_sen_rads(Rob_sel_labels));
 
 
 %% PHASE II Failure simulation
+lost_area = 0;
 % randomly select a node to fail
 indx = floor(rand(1)*sum(Rob_active));
 if indx == 0
     indx = 1;
 end
 fail_rob_label = Rob_active_lab(indx);
+% total area lost due to robot failure
+lost_area = lost_area + Rob_areas(fail_rob_label);
+% rearrage based on omega tuning hoops tuning
+% omega_tune;
+% rearrange based on radius parameter
+rad_tune
 
-% find nodes upto the omega level
-adj_omega = adj_u^omega;
+% rearrage the robots to this local area
+% solve the greedy algorithm to place the robots
+[set_gre, h_gre_1, prob_pos_gre] = gre_place(fail_rob_nbh, R_x, delta,...
+    b_box, Rob_sen_rads, com_fail_rob_nbh, com_fail_rob_nbh_pos);
 
-% find robots at omega hops from the robot
-fail_rob_nbh_indx = find(adj_omega(indx,:)>0);
-fail_rob_nbh = Rob_active_lab(fail_rob_nbh_indx);
+% rearrange the active robot set to match the ones in the coordinate order
+set_gre = [com_fail_rob_nbh_pos; set_gre];
+Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
 
-% find the complement set of fail_rob_nbhs in the active robot list 
-com_fail_rob_nbh_indx = find(adj_omega(indx,:)==0);
-com_fail_rob_nbh = Rob_active_lab(com_fail_rob_nbh_indx);
+% construct the graph from the robots 
+% adjacency matrix
+adj = zeros(length(Rob_active_lab));
+nodenames = cell(length(Rob_active_lab),1);
+for i = 1:length(Rob_active_lab)
+    nodenames{i} = num2str(Rob_active_lab(i));
+end
 
-% update the active robot list
-Rob_active(fail_rob_label) = 0;
-Rob_active_lab(indx) = [];
-Rob_active_pos(indx,:) = [];
+% construct the adjacent matrix
+for i = 1:length(Rob_active_lab)
+    for j = i+1:length(Rob_active_lab)
+        % compute the distance between the robots 
+        dist = norm(set_gre(i,:) - set_gre(j,:));
+        % communication radius sum
+        max_com = max(Rob_sen_rads(Rob_active_lab(i)),  ...
+            Rob_sen_rads(Rob_active_lab(i)));
+        if dist <= max_com
+            adj(i,j) = dist;
+            adj(j,i) = dist;            
+        end
+    end
+end
+% unweighted adjacency matrix
+adj_u = double(adj>0);
+t_box = [env_x(1) env_x(end)
+    env_y(1) env_y(end)];
+figure,
+plots(set_gre, prob_pos_gre, t_box, delta, adj_u,Rob_sen_rads(Rob_active_lab));
 
-% update the bounding box where the robots failed robot neighbor has to
-% reconfigure
-% find the minimum reachable coordinates in the failed robots 
-min_coords_x = Rob_active_pos(:,1) - Rob_sen_rads(Rob_active_lab);
-min_coords_x = max([min_coords_x'; env_min_x*ones(1,length(min_coords_x))])';
-min_coords_y = Rob_active_pos(:,2) - Rob_sen_rads(Rob_active_lab);
-min_coords_y = max([min_coords_y'; env_min_y*ones(1,length(min_coords_y))])';
-% find the maximum reachable coordinates of the failed robots
-max_coords_x = Rob_active_pos(:,1) + Rob_sen_rads(Rob_active_lab);
-max_coords_x = min([max_coords_x'; env_max_x*ones(1,length(max_coords_x))])';
-max_coords_y = Rob_active_pos(:,2) + Rob_sen_rads(Rob_active_lab);
-max_coords_y = min([max_coords_y'; env_max_y*ones(1,length(max_coords_y))])';
 
-% compute the bounding box coordinates
-b_box = [min(min_coords_x) min(min_coords_y);
-    max(max_coords_x) max(max_coords_y)];
 
 %% Writing data to file
 % set the outputs paths

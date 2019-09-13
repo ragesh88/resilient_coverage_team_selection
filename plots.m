@@ -13,23 +13,23 @@ function plots(set, prob_pos, b_box, delta, adj, radius)
     env_y_size = length(env_y_range);
     
     % plot probability map
-    prob_90 = [];
-    prob_50 = [];
-    for i = 1 : env_x_size
-        for j = 1 : env_y_size
-            if is_in_obstacle(i,j) == 0
-                if prob_pos(i,j)>= 0.90
-                    prob_90 = [prob_90; [i,j]];
-                elseif prob_pos(i,j)>= 0.50 && prob_pos(i,j)<0.90
-                    prob_50 = [prob_50; [i,j]];
-                end
-            end
-        end
-    end
-
-    % plot probability map
-    plot(prob_90(:,1), prob_90(:,2), 'bo'); hold on
-    plot(prob_50(:,1), prob_50(:,2), 'go'); hold on
+%     prob_90 = [];
+%     prob_50 = [];
+%     for i = 1 : env_x_size
+%         for j = 1 : env_y_size
+%             if is_in_obstacle(i,j) == 0
+%                 if prob_pos(i,j)>= 0.90
+%                     prob_90 = [prob_90; [i,j]];
+%                 elseif prob_pos(i,j)>= 0.50 && prob_pos(i,j)<0.90
+%                     prob_50 = [prob_50; [i,j]];
+%                 end
+%             end
+%         end
+%     end
+% 
+%     % plot probability map
+%     plot(prob_90(:,1), prob_90(:,2), 'bo'); hold on
+%     plot(prob_50(:,1), prob_50(:,2), 'go'); hold on
 
     % plot sensor positions
     plot(set(:,1), set(:,2), 'ro', 'MarkerFaceColor', 'r'); hold on
