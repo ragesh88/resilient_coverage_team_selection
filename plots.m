@@ -1,5 +1,5 @@
 % function: plot probability map, sensor placement and the environment
-function plots(set, prob_pos, b_box, delta, adj, radius)
+function plots(set, b_box, delta, radius)
     
     global ...
         obs_1x obs_1y len_1x len_1y...
@@ -34,15 +34,15 @@ function plots(set, prob_pos, b_box, delta, adj, radius)
     % plot sensor positions
     plot(set(:,1), set(:,2), 'ro', 'MarkerFaceColor', 'r'); hold on
     % plot the sensor links
-    for i = 1:size(adj,1)
-        for j = i+1:size(adj,2)
-            if adj(i,j)
-                plot([set(i,1) set(j,1)], [set(i,2) set(j,2)], 'r');
-            end
-        end
-    end
+%     for i = 1:size(adj,1)
+%         for j = i+1:size(adj,2)
+%             if adj(i,j)
+%                 plot([set(i,1) set(j,1)], [set(i,2) set(j,2)], 'r');
+%             end
+%         end
+%     end
     % draw communication ranges around them
-    for i = 1:size(adj,1)
+    for i = 1:size(set,1)
         rectangle('Position',[set(i,1)-radius(i) set(i,2)-radius(i)...
             2*radius(i) 2*radius(i)], 'Curvature', [1 1]);
     end

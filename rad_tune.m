@@ -27,8 +27,19 @@ p = 1;
 q = 1;
 % find the robots in the sensing area
 for i = 1:length(Rob_active_lab)
-    if norm(fail_rob_pos(1) - Rob_active_pos(i,1)) <= b_box_x && ...
-            norm(fail_rob_pos(2) - Rob_active_pos(i,2)) <= b_box_y
+%     if norm(fail_rob_pos(1) - Rob_active_pos(i,1)) <= b_box_x && ...
+%             norm(fail_rob_pos(2) - Rob_active_pos(i,2)) <= b_box_y
+%         fail_rob_nbh(p) = Rob_active_lab(i);
+%         p = p + 1;
+%     else
+%         com_fail_rob_nbh(q) = Rob_active_lab(i);
+%         com_fail_rob_nbh_pos(q,:) = Rob_active_pos(i,:);
+%         q = q + 1;
+%     end
+    if Rob_active_pos(i,1) >= b_box(1,1) && ...
+       Rob_active_pos(i,1) <= b_box(1,2) && ...
+       Rob_active_pos(i,2) >= b_box(2,1) && ...
+       Rob_active_pos(i,2) <= b_box(2,2)
         fail_rob_nbh(p) = Rob_active_lab(i);
         p = p + 1;
     else

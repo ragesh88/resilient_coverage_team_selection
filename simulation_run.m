@@ -16,7 +16,7 @@ Rob_pool = ones(A_n,1);
 % tuning parameter
 omega = 2; % hoops
 radius_tune = 10; % radius to consider for tuning
-coverage_thres = 120;
+coverage_thres = 190;
 
 % realiability parameters
 % generate mean failure time for all robots
@@ -54,7 +54,7 @@ env_y = env_min_y:delta:env_max_y;
 
 % area covered by each robot
 max_area = 200;
-Rob_areas = max_area * ones(A_n,1);
+Rob_areas = max_area *MTTFs/max(MTTFs);
 % sensing radius of the robots
 Rob_sen_rads = sqrt(Rob_areas/pi);
 % sensing parameter 
@@ -82,7 +82,7 @@ b_box = [env_x(1) env_x(end)
     env_y(1) env_y(end)];
 
 % solve the greedy algorithm to place the robots
-[set_gre, h_gre, prob_pos_gre] = gre_place(Rob_sel_labels, R_x, delta,...
+[set_gre, h_gre, ~] = gre_place(Rob_sel_labels, R_x, delta,...
     b_box, Rob_sen_rads,[],[]);
 
 % update the list of available robots
@@ -96,31 +96,31 @@ Rob_active_pos = set_gre;
 
 % construct the graph from the robots 
 % adjacency matrix
-adj = zeros(length(Rob_sel_labels));
-nodenames = cell(length(Rob_sel_labels),1);
-for i = 1:length(Rob_sel_labels)
-    nodenames{i} = num2str(Rob_sel_labels(i));
-end
+% adj = zeros(length(Rob_sel_labels));
+% nodenames = cell(length(Rob_sel_labels),1);
+% for i = 1:length(Rob_sel_labels)
+%     nodenames{i} = num2str(Rob_sel_labels(i));
+% end
+% 
+% % construct the adjacent matrix
+% for i = 1:length(Rob_sel_labels)
+%     for j = i+1:length(Rob_sel_labels)
+%         % compute the distance between the robots 
+%         dist = norm(set_gre(i,:) - set_gre(j,:));
+%         % communication radius sum
+%         max_com = com_range;
+%         if dist <= max_com
+%             adj(i,j) = dist;
+%             adj(j,i) = dist;            
+%         end
+%     end
+% end
+% % unweighted adjacency matrix
+% adj_u = double(adj>0);
+% 
+% C_graph = graph(adj,nodenames);
 
-% construct the adjacent matrix
-for i = 1:length(Rob_sel_labels)
-    for j = i+1:length(Rob_sel_labels)
-        % compute the distance between the robots 
-        dist = norm(set_gre(i,:) - set_gre(j,:));
-        % communication radius sum
-        max_com = com_range;
-        if dist <= max_com
-            adj(i,j) = dist;
-            adj(j,i) = dist;            
-        end
-    end
-end
-% unweighted adjacency matrix
-adj_u = double(adj>0);
-
-C_graph = graph(adj,nodenames);
-
-plots(set_gre, prob_pos_gre, b_box, delta, adj_u,Rob_sen_rads(Rob_sel_labels));
+plots(set_gre, b_box, delta, Rob_sen_rads(Rob_sel_labels));
 hold on
 % plot the robot labels 
 for i = 1:length(Rob_active_lab)
@@ -128,14 +128,18 @@ for i = 1:length(Rob_active_lab)
 end
 
 %% PHASE II Failure simulation
+tot_area = sum(Rob_areas(Rob_active_lab));
 lost_area = 0;
+% generate the time for next failure
 % randomly select a node to fail
 indx = floor(rand(1)*sum(Rob_active));
 if indx == 0
     indx = 1;
 end
 fail_rob_label = Rob_active_lab(indx);
-% total area lost due to robot failure
+% total area after robot failure
+tot_area = tot_area - Rob_areas(fail_rob_label);
+% total area lost
 lost_area = lost_area + Rob_areas(fail_rob_label);
 % rearrage based on omega tuning hoops tuning
 % omega_tune;
@@ -144,48 +148,77 @@ rad_tune
 
 % rearrage the robots to this local area
 % solve the greedy algorithm to place the robots
-[set_gre, h_gre_1, prob_pos_gre] = gre_place(fail_rob_nbh, R_x, delta,...
+[fail_rob_nbh_pos, ~, prob_pos_gre] = gre_place(fail_rob_nbh, R_x, delta,...
     b_box, Rob_sen_rads, com_fail_rob_nbh, com_fail_rob_nbh_pos);
 
 % rearrange the active robot set to match the ones in the coordinate order
-set_gre = [com_fail_rob_nbh_pos; set_gre];
+set_gre = [com_fail_rob_nbh_pos; fail_rob_nbh_pos];
 Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
 
 % construct the graph from the robots 
 % adjacency matrix
-adj = zeros(length(Rob_active_lab));
-nodenames = cell(length(Rob_active_lab),1);
-for i = 1:length(Rob_active_lab)
-    nodenames{i} = num2str(Rob_active_lab(i));
-end
+% adj = zeros(length(Rob_active_lab));
+% nodenames = cell(length(Rob_active_lab),1);
+% for i = 1:length(Rob_active_lab)
+%     nodenames{i} = num2str(Rob_active_lab(i));
+% end
+% 
+% % construct the adjacent matrix
+% for i = 1:length(Rob_active_lab)
+%     for j = i+1:length(Rob_active_lab)
+%         % compute the distance between the robots 
+%         dist = norm(set_gre(i,:) - set_gre(j,:));
+%         % communication radius sum
+%         max_com = com_range;
+%         if dist <= max_com
+%             adj(i,j) = dist;
+%             adj(j,i) = dist;            
+%         end
+%     end
+% end
+% % unweighted adjacency matrix
+% adj_u = double(adj>0);
 
-% construct the adjacent matrix
-for i = 1:length(Rob_active_lab)
-    for j = i+1:length(Rob_active_lab)
-        % compute the distance between the robots 
-        dist = norm(set_gre(i,:) - set_gre(j,:));
-        % communication radius sum
-        max_com = com_range;
-        if dist <= max_com
-            adj(i,j) = dist;
-            adj(j,i) = dist;            
-        end
-    end
-end
-% unweighted adjacency matrix
-adj_u = double(adj>0);
 t_box = [env_x(1) env_x(end)
     env_y(1) env_y(end)];
 
 rectangle('Position',[ b_box(1,1) b_box(2,1) b_box(1,2)-b_box(1,1) b_box(2,2)-b_box(2,1)])
 plot(fail_rob_pos(1), fail_rob_pos(2),'b*')
 figure,
-plots(set_gre, prob_pos_gre, t_box, delta, adj_u,Rob_sen_rads(Rob_active_lab));
+plots(set_gre,  t_box, delta, Rob_sen_rads(Rob_active_lab));
 hold on 
 for i = 1:length(Rob_active_lab)
     text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
 end
 
+h_gre_1 =  h_compute_config(set_gre, t_box, delta, R_x, Rob_sen_rads(Rob_active_lab));
+
+% invoke the intermediate selection MILP to get new robot which 
+prob3_request = 0;
+while h_gre_1 < coverage_thres
+    alpha1 = alpha/(prod(1-Rob_vals(Rob_active_lab)));
+    [info, Rob_sel] = prob3_MILP(Rob_areas,Rob_vals,...
+    alpha1,lost_area, Rob_pool);
+    % update the list of available robots
+    Rob_pool = Rob_pool - Rob_sel;
+    % add the selected robots to list of failed robot neighbors
+    fail_rob_nbh = [fail_rob_nbh; find(Rob_sel)];
+    % recompute the coverage
+    [fail_rob_nbh_pos, ~, prob_pos_gre] = gre_place(fail_rob_nbh, R_x, delta,...
+    b_box, Rob_sen_rads, com_fail_rob_nbh, com_fail_rob_nbh_pos);
+    % rearrange the active robot set to match the ones in the coordinate order
+    set_gre = [com_fail_rob_nbh_pos; fail_rob_nbh_pos];
+    Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
+    h_gre_1 =  h_compute_config(set_gre, t_box, delta, R_x, Rob_sen_rads(Rob_active_lab));
+    prob3_request = prob3_request + 1;
+end
+
+figure
+plots(set_gre,  t_box, delta, Rob_sen_rads(Rob_active_lab));
+hold on 
+for i = 1:length(Rob_active_lab)
+    text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
+end
 
 %% Writing data to file
 % set the outputs paths
