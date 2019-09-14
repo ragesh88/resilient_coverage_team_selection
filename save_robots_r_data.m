@@ -1,9 +1,13 @@
-%% this script saves the data into a folder with the name 'Trail_#trail number'
-
+%% this script saves the data into a folder with the name 
+% coverage_thresh Trail_#trail number'
+clc
+clearvars
 % number of trails to be done
-no_of_trails = 2;
+coverage_thres = 190;
+no_of_trails = 10;
 % output folder path
-out_fldr_pth = '/media/ragesh/Disk1/data/resilient_coverage/cov_vs_r/';
+out_fldr_pth = '/media/ragesh/Disk1/data/resilient_coverage/robots_vs_r/';
+out_fldr_pth = [out_fldr_pth num2str(coverage_thres) '/'];
 if ~exist(out_fldr_pth, 'dir')
     mkdir(out_fldr_pth);
 end
@@ -18,7 +22,7 @@ subFolders = files(dirFlags);
 trail_no_srt = length(subFolders) + 1;
 
 for trail = trail_no_srt:no_of_trails
-    coverage_r_data_gen;
+    new_robots_r_data;
     % make the directory to saving the data
     new_out_folder = [out_fldr_pth 'trail_' num2str(trail)];
     mkdir(new_out_folder);
@@ -28,7 +32,7 @@ for trail = trail_no_srt:no_of_trails
     fprintf(readmefileid,['## This folder contains the outputs of a simulation'...
         'performed by a team of robots. The each robot in the team fails'...
         'randomly. The team is rearranged based on a bounding box. Here we'...
-        'generate data to understand the coverage vs bounding box size\n\n']);
+        'generate data to understand the number of robots requested\n\n']);
     fprintf(readmefileid,'# Inputs for the simulation\n');
     fprintf(readmefileid,'-Number of robots : %d\n', A_n);
     fprintf(readmefileid,'-The minimum x coordinate of environment : %f\n',...
@@ -41,6 +45,7 @@ for trail = trail_no_srt:no_of_trails
         env_max_y);
     fprintf(readmefileid,'-The discretization along x axis : %f\n', delta);
     fprintf(readmefileid,'-The discretization along y axis : %f\n', delta);
+    fprintf(readmefileid,'-The coverage threshold : %f\n', delta);
     fprintf(readmefileid,'-The tuning radius range minimum : %f\n',...
         radius_tune_range(1));
     fprintf(readmefileid,'-The tuning radius range maximum : %f\n',...
@@ -50,12 +55,12 @@ for trail = trail_no_srt:no_of_trails
     fprintf(readmefileid,'-Design failure probability (alpha) : %f\n', alpha);
     fprintf(readmefileid,'-Design budget : %f\n', budget);
     fprintf(readmefileid,'-Sensing decay factor : %f\n', lambda);   
-    fprintf(readmefileid,'-Base coverage : %f\n', base_coverage);   
+    fprintf(readmefileid,'-Base coverage : %f\n', base_coverage);  
+    fprintf(readmefileid,'-Coverage Threshold: %f\n', coverage_thres);  
     fclose(readmefileid);
     
     % write the required data to csv files
     csvwrite([new_out_folder '/radius_tune_range.csv'],  radius_tune_range);
-    csvwrite([new_out_folder  '/coverage.csv'], coverage_out);
-    csvwrite([new_out_folder '/coverage_ratio.csv'],coverage_out/base_coverage);
+    csvwrite([new_out_folder  '/robots.csv'], prob3_robots);
     
 end

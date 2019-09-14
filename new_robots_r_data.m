@@ -2,7 +2,7 @@
 % to change in radius of region.
 
 clc
-clearvars
+% clearvars
 close all
 
 % global variables
@@ -31,7 +31,7 @@ env_y = env_min_y:delta:env_max_y;
 omega = 2; % hoops
 % radius_tune = 10; % radius to consider for tuning
 radius_tune_range = 5:5:env_size; % radius to consider for tuning
-coverage_thres = 190;
+% coverage_thres = 190;
 
 % realiability parameters
 % generate mean failure time for all robots
@@ -130,7 +130,10 @@ Rob_active_pos(indx,:) = [];
 % omega_tune;
 % rearrange based on radius parameter
 % iterate over various radius parameter
-coverage_out = zeros(length(radius_tune_range),1);
+
+% invoke the intermediate selection MILP to get new robot which 
+prob3_robots = zeros(length(radius_tune_range),1);
+
 for s = 1:length(radius_tune_range)
     radius_tune = radius_tune_range(s);
     rad_tune_1;        
@@ -140,22 +143,39 @@ for s = 1:length(radius_tune_range)
         Rob_active_lab = com_fail_rob_nbh;
         [h_gre_1, ~ ] =  h_compute_config(set_gre, t_box, delta,...
             R_x, Rob_sen_rads(Rob_active_lab));
-        coverage_out(s) = h_gre_1;
-        continue;
+        coverage = h_gre_1;
+    else
+        % rearrage the robots to this local area
+        % solve the greedy algorithm to place the robots
+        [fail_rob_nbh_pos, ~, prob_pos_gre] = gre_place(fail_rob_nbh, R_x, delta,...
+            b_box, Rob_sen_rads, com_fail_rob_nbh, com_fail_rob_nbh_pos);
+        
+        % rearrange the active robot set to match the ones in the coordinate order
+        set_gre = [com_fail_rob_nbh_pos; fail_rob_nbh_pos];
+        Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];       
+       
+        
+        % the new coverage value computed
+        [h_gre_1, ~ ] =  h_compute_config(set_gre, t_box, delta, R_x, Rob_sen_rads(Rob_active_lab));
+        coverage = h_gre_1;
     end
-    % rearrage the robots to this local area
-    % solve the greedy algorithm to place the robots
-    [fail_rob_nbh_pos, ~, prob_pos_gre] = gre_place(fail_rob_nbh, R_x, delta,...
+    robots_requested = 0;
+    while h_gre_1 < coverage_thres
+        alpha1 = alpha/(prod(1-Rob_vals(Rob_active_lab)));
+        [info, Rob_sel] = prob3_MILP(Rob_areas,Rob_vals,...
+        alpha1,lost_area, Rob_pool);
+        % update the list of available robots
+        Rob_pool = Rob_pool - Rob_sel;
+        % add the selected robots to list of failed robot neighbors
+        fail_rob_nbh = [fail_rob_nbh; find(Rob_sel)];
+        % recompute the coverage
+        [fail_rob_nbh_pos, ~, prob_pos_gre] = gre_place(fail_rob_nbh, R_x, delta,...
         b_box, Rob_sen_rads, com_fail_rob_nbh, com_fail_rob_nbh_pos);
-    
-    % rearrange the active robot set to match the ones in the coordinate order
-    set_gre = [com_fail_rob_nbh_pos; fail_rob_nbh_pos];
-    Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
-    
-%     t_box = [env_x(1) env_x(end)
-%         env_y(1) env_y(end)];
-    
-    % the new coverage value computed
-    [h_gre_1, ~ ] =  h_compute_config(set_gre, t_box, delta, R_x, Rob_sen_rads(Rob_active_lab));
-    coverage_out(s) = h_gre_1;
+        % rearrange the active robot set to match the ones in the coordinate order
+        set_gre = [com_fail_rob_nbh_pos; fail_rob_nbh_pos];
+        Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
+        h_gre_1 =  h_compute_config(set_gre, t_box, delta, R_x, Rob_sen_rads(Rob_active_lab));
+        robots_requested = robots_requested + sum(Rob_sell);
+    end
+   prob3_robots(s) = robots_requested;
 end

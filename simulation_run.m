@@ -194,7 +194,7 @@ for i = 1:length(Rob_active_lab)
     text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
 end
 
-h_gre_1 =  h_compute_config(set_gre, t_box, delta, R_x, Rob_sen_rads(Rob_active_lab));
+[h_gre_1, ~ ] =  h_compute_config(set_gre, t_box, delta, R_x, Rob_sen_rads(Rob_active_lab));
 
 % invoke the intermediate selection MILP to get new robot which 
 prob3_request = 0;
