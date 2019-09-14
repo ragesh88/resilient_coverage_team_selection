@@ -1,4 +1,4 @@
-%% This script generates the data to study change in coverage with respect 
+%% This script generates the data to study number robots requested with respect 
 % to change in radius of region.
 
 clc
