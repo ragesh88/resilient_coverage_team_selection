@@ -4,7 +4,7 @@ clearvars
 close all
 
 % global variables
-global lambda
+global lambda com_range
 
 
 % simulation parameters
@@ -15,7 +15,7 @@ Rob_pool = ones(A_n,1);
 
 % tuning parameter
 omega = 2; % hoops
-radius_tune = 15; % radius to consider for tuning
+radius_tune = 10; % radius to consider for tuning
 coverage_thres = 120;
 
 % realiability parameters
@@ -59,6 +59,8 @@ Rob_areas = max_area * ones(A_n,1);
 Rob_sen_rads = sqrt(Rob_areas/pi);
 % sensing parameter 
 lambda = 0.1; % sensing decay parameter 
+% communication range
+com_range = max(Rob_sen_rads);
 
 % compute the reliability value for all
 Rob_vals = zeros(A_n,1);
@@ -106,8 +108,7 @@ for i = 1:length(Rob_sel_labels)
         % compute the distance between the robots 
         dist = norm(set_gre(i,:) - set_gre(j,:));
         % communication radius sum
-        max_com = max(Rob_sen_rads(Rob_sel_labels(i)),  ...
-            Rob_sen_rads(Rob_sel_labels(i)));
+        max_com = com_range;
         if dist <= max_com
             adj(i,j) = dist;
             adj(j,i) = dist;            
@@ -120,7 +121,11 @@ adj_u = double(adj>0);
 C_graph = graph(adj,nodenames);
 
 plots(set_gre, prob_pos_gre, b_box, delta, adj_u,Rob_sen_rads(Rob_sel_labels));
-
+hold on
+% plot the robot labels 
+for i = 1:length(Rob_active_lab)
+    text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
+end
 
 %% PHASE II Failure simulation
 lost_area = 0;
@@ -160,8 +165,7 @@ for i = 1:length(Rob_active_lab)
         % compute the distance between the robots 
         dist = norm(set_gre(i,:) - set_gre(j,:));
         % communication radius sum
-        max_com = max(Rob_sen_rads(Rob_active_lab(i)),  ...
-            Rob_sen_rads(Rob_active_lab(i)));
+        max_com = com_range;
         if dist <= max_com
             adj(i,j) = dist;
             adj(j,i) = dist;            
@@ -172,9 +176,15 @@ end
 adj_u = double(adj>0);
 t_box = [env_x(1) env_x(end)
     env_y(1) env_y(end)];
+
+rectangle('Position',[ b_box(1,1) b_box(2,1) b_box(1,2)-b_box(1,1) b_box(2,2)-b_box(2,1)])
+plot(fail_rob_pos(1), fail_rob_pos(2),'b*')
 figure,
 plots(set_gre, prob_pos_gre, t_box, delta, adj_u,Rob_sen_rads(Rob_active_lab));
-
+hold on 
+for i = 1:length(Rob_active_lab)
+    text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
+end
 
 
 %% Writing data to file
