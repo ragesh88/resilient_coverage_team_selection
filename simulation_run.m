@@ -77,9 +77,11 @@ l_alpha = -log(alpha);
 % the set containing the selected robot labels
 Rob_sel_labels = find(Rob_sel);
 
+
 % bounding box of the domain
 b_box = [env_x(1) env_x(end)
     env_y(1) env_y(end)];
+
 
 % solve the greedy algorithm to place the robots
 [set_gre, h_gre, ~] = gre_place(Rob_sel_labels, R_x, delta,...
@@ -119,8 +121,9 @@ Rob_active_pos = set_gre;
 % adj_u = double(adj>0);
 % 
 % C_graph = graph(adj,nodenames);
-
-plots(set_gre, b_box, delta, Rob_sen_rads(Rob_sel_labels));
+[~, h_pos] = h_compute_config(set_gre, b_box, delta, R_x,...
+    Rob_sen_rads(Rob_sel_labels));
+plots(set_gre, b_box, delta, h_pos);
 hold on
 % plot the robot labels 
 for i = 1:length(Rob_active_lab)
@@ -185,7 +188,7 @@ t_box = [env_x(1) env_x(end)
 rectangle('Position',[ b_box(1,1) b_box(2,1) b_box(1,2)-b_box(1,1) b_box(2,2)-b_box(2,1)])
 plot(fail_rob_pos(1), fail_rob_pos(2),'b*')
 figure,
-plots(set_gre,  t_box, delta, Rob_sen_rads(Rob_active_lab));
+plots(set_gre, b_box, delta, Rob_sen_rads(Rob_active_lab));
 hold on 
 for i = 1:length(Rob_active_lab)
     text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
@@ -214,24 +217,24 @@ while h_gre_1 < coverage_thres
 end
 
 figure
-plots(set_gre,  t_box, delta, Rob_sen_rads(Rob_active_lab));
+plots(set_gre, b_box, delta, Rob_sen_rads(Rob_active_lab));
 hold on 
 for i = 1:length(Rob_active_lab)
     text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
 end
 
-%% Writing data to file
-% set the outputs paths
-output_path = '/media/ragesh/Disk1/data/resilient_coverage/';
-% find the contents in the output directory
-files = dir(output_path);
-% Get a logical vector that tells which is a directory.
-dirFlags = [files.isdir] & ~strcmp({files.name},'.')...
-    & ~strcmp({files.name},'..');
-% Extract only those that are directories.
-subFolders = files(dirFlags);
-% compute the trail number
-trail_no = length(subFolders) + 1;
-
-
-% write the data to files in appropriate folders
+% %% Writing data to file
+% % set the outputs paths
+% output_path = '/media/ragesh/Disk1/data/resilient_coverage/';
+% % find the contents in the output directory
+% files = dir(output_path);
+% % Get a logical vector that tells which is a directory.
+% dirFlags = [files.isdir] & ~strcmp({files.name},'.')...
+%     & ~strcmp({files.name},'..');
+% % Extract only those that are directories.
+% subFolders = files(dirFlags);
+% % compute the trail number
+% trail_no = length(subFolders) + 1;
+% 
+% 
+% % write the data to files in appropriate folders

@@ -1,4 +1,4 @@
-function [h_sensor] = h_compute_config(pos, b_box, delta, R_x,...
+function [h_sensor, h_pos] = h_compute_config(pos, b_box, delta, R_x,...
     Rob_sen_rads)
 % the function computes the coverage value of the whole domain given the
 % positions of the robots
@@ -10,7 +10,7 @@ function [h_sensor] = h_compute_config(pos, b_box, delta, R_x,...
     
     global lambda
     
-     env_x_range = b_box(1,1):delta:b_box(1,2);
+    env_x_range = b_box(1,1):delta:b_box(1,2);
     env_y_range = b_box(2,1):delta:b_box(2,2);
     
     env_x_size = length(env_x_range);
