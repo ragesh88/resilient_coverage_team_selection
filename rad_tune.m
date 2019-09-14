@@ -20,9 +20,9 @@ b_box_y = b_box(2,2) -b_box(2,1);
 
 
 % robots inside and outside the region
-fail_rob_nbh = zeros(length(Rob_active_lab),1);
-com_fail_rob_nbh = zeros(length(Rob_active_lab),1);
-com_fail_rob_nbh_pos = zeros(length(Rob_active_lab),2);
+fail_rob_nbh = zeros(A_n,1);
+com_fail_rob_nbh = zeros(A_n,1);
+com_fail_rob_nbh_pos = zeros(A_n,2);
 p = 1;
 q = 1;
 % find the robots in the sensing area

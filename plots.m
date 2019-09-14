@@ -20,9 +20,9 @@ function plots(set, t_box, delta, h_pos)
         for j = 1 : env_y_size
 %             if is_in_obstacle(i,j) == 0
                 if prob_pos(i,j)>= 0.90
-                    prob_90 = [prob_90; [i,j]];
+                    prob_90 = [prob_90; [env_x_range(i),env_y_range(j)]];
                 elseif prob_pos(i,j)>= 0.50 && prob_pos(i,j)<0.90
-                    prob_50 = [prob_50; [i,j]];
+                    prob_50 = [prob_50; [env_x_range(i),env_y_range(j)]];
                 end
 %             end
         end

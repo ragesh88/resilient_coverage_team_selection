@@ -34,7 +34,7 @@ function [gre_set, h, prob_pos] = gre_place(Rob_labels, R_x, delta,...
         % coordination (i,j)
         for i = 1:env_x_size
             for j = 1:env_y_size
-                [k,i,j]
+%                 [k,i,j]
                 % if (i,j) is not inside obstacle
                 if ~is_in_obstacle(env_x_range(i),env_y_range(j))
 %                         && 
