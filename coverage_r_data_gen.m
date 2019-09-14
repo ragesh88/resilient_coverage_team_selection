@@ -115,6 +115,11 @@ R_vals_act = R_vals_t(Rob_active==1);
 % select a failed robot through roulette wheel selection
 indx = RouletteWheelSelection(R_vals_act);
 fail_rob_label = Rob_active_lab(indx);
+% update the active robot list
+Rob_active(fail_rob_label) = 0;
+fail_rob_pos = Rob_active_pos(indx,:);
+Rob_active_lab(indx) = [];
+Rob_active_pos(indx,:) = [];
 % total area after robot failure
 % tot_area = tot_area - Rob_areas(fail_rob_label);
 % % total area lost
@@ -126,7 +131,7 @@ fail_rob_label = Rob_active_lab(indx);
 coverage_out = zeros(length(radius_tune_range),1);
 for i = 1:length(radius_tune_range)
     radius_tune = radius_tune_range(i);
-    rad_tune
+    rad_tune_1;
     if isempty(fail_rob_nbh)
         continue;
     end
