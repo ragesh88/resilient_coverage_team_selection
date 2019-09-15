@@ -166,7 +166,7 @@ for s = 1:length(radius_tune_range)
     Rob_pool_t = Rob_pool;
     fail_rob_nbh_t = fail_rob_nbh;
     while h_gre_1 < coverage_thres       
-        alpha1 = alpha/(prod(1-Rob_vals_t(Rob_active_lab_t)));
+        alpha1 = alpha/(prod(1-R_vals_t(Rob_active_lab_t)));
         [info, Rob_sel] = prob3_MILP(Rob_areas,Rob_vals,...
         alpha1,lost_area, Rob_pool_t);
         % update the list of available robots

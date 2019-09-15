@@ -187,8 +187,11 @@ t_box = [env_x(1) env_x(end)
 
 rectangle('Position',[ b_box(1,1) b_box(2,1) b_box(1,2)-b_box(1,1) b_box(2,2)-b_box(2,1)])
 plot(fail_rob_pos(1), fail_rob_pos(2),'b*')
+% compute the new coverage values
+[~, h_pos] = h_compute_config(set_gre, t_box, delta, R_x,...
+    Rob_sen_rads(Rob_sel_labels));
 figure,
-plots(set_gre, b_box, delta, Rob_sen_rads(Rob_active_lab));
+plots(set_gre, t_box, delta, h_pos);
 hold on 
 for i = 1:length(Rob_active_lab)
     text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
@@ -217,8 +220,12 @@ while h_gre_1 < coverage_thres
     prob3_request = prob3_request + 1;
 end
 
+% compute the new coverage values
+[~, h_pos] = h_compute_config(set_gre, t_box, delta, R_x,...
+    Rob_sen_rads(Rob_sel_labels));
+
 figure
-plots(set_gre, b_box, delta, Rob_sen_rads(Rob_active_lab));
+plots(set_gre, t_box, delta, h_pos);
 hold on 
 for i = 1:length(Rob_active_lab)
     text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
