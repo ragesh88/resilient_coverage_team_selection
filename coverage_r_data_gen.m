@@ -62,6 +62,8 @@ max_area = 200;
 Rob_areas = max_area *MTTFs/max(MTTFs);
 % sensing radius of the robots
 Rob_sen_rads = sqrt(Rob_areas/pi);
+% desired area 
+desired_area = 1 * domain_area;
 % sensing parameter 
 lambda = 0.1; % sensing decay parameter 
 % communication range
@@ -77,7 +79,7 @@ l_alpha = -log(alpha);
 
 % solve the MILP to select the robots
 [info, Rob_sel] = prob1_MILP(Rob_costs,Rob_areas,Rob_vals,budget,...
-    alpha,domain_area);
+    alpha,desired_area);
 
 % the set containing the selected robot labels
 Rob_sel_labels = find(Rob_sel);

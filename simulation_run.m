@@ -16,7 +16,7 @@ Rob_pool = ones(A_n,1);
 % tuning parameter
 omega = 2; % hoops
 radius_tune = 10; % radius to consider for tuning
-coverage_thres = 190;
+coverage_thres = 200;
 
 % realiability parameters
 % generate mean failure time for all robots

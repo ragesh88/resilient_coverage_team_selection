@@ -49,6 +49,7 @@ for trail = trail_no_srt:no_of_trails
         radius_tune_range(2)-radius_tune_range(1));
     fprintf(readmefileid,'-Design failure probability (alpha) : %f\n', alpha);
     fprintf(readmefileid,'-Design budget : %f\n', budget);
+    fprintf(readmefileid,'-Design area : %f\n', desired_area);
     fprintf(readmefileid,'-Sensing decay factor : %f\n', lambda);   
     fprintf(readmefileid,'-Base coverage : %f\n', base_coverage);   
     fclose(readmefileid);
