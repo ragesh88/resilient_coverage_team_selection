@@ -4,7 +4,7 @@ clc
 clearvars
 % number of trails to be done
 coverage_thres = 190;
-no_of_trails = 10;
+no_of_trails = 2;
 % output folder path
 out_fldr_pth = '/media/ragesh/Disk1/data/resilient_coverage/robots_vs_r/';
 out_fldr_pth = [out_fldr_pth num2str(coverage_thres) '/'];

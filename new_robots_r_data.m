@@ -133,7 +133,9 @@ Rob_active_pos(indx,:) = [];
 
 % invoke the intermediate selection MILP to get new robot which 
 prob3_robots = zeros(length(radius_tune_range),1);
-
+tot_area = sum(Rob_areas(Rob_active_lab));
+lost_area = 0;
+lost_area = lost_area + Rob_areas(fail_rob_label);
 for s = 1:length(radius_tune_range)
     radius_tune = radius_tune_range(s);
     rad_tune_1;        
@@ -160,22 +162,27 @@ for s = 1:length(radius_tune_range)
         coverage = h_gre_1;
     end
     robots_requested = 0;
-    while h_gre_1 < coverage_thres
-        alpha1 = alpha/(prod(1-Rob_vals(Rob_active_lab)));
+    Rob_active_lab_t = Rob_active_lab;
+    Rob_pool_t = Rob_pool;
+    fail_rob_nbh_t = fail_rob_nbh;
+    while h_gre_1 < coverage_thres       
+        alpha1 = alpha/(prod(1-Rob_vals_t(Rob_active_lab_t)));
         [info, Rob_sel] = prob3_MILP(Rob_areas,Rob_vals,...
-        alpha1,lost_area, Rob_pool);
+        alpha1,lost_area, Rob_pool_t);
         % update the list of available robots
-        Rob_pool = Rob_pool - Rob_sel;
+        Rob_pool_t = Rob_pool_t - Rob_sel;
         % add the selected robots to list of failed robot neighbors
-        fail_rob_nbh = [fail_rob_nbh; find(Rob_sel)];
+        fail_rob_nbh_t = [fail_rob_nbh_t; find(Rob_sel)];
         % recompute the coverage
-        [fail_rob_nbh_pos, ~, prob_pos_gre] = gre_place(fail_rob_nbh, R_x, delta,...
+        [fail_rob_nbh_pos_t, ~, prob_pos_gre] = gre_place(fail_rob_nbh_t, R_x, delta,...
         b_box, Rob_sen_rads, com_fail_rob_nbh, com_fail_rob_nbh_pos);
         % rearrange the active robot set to match the ones in the coordinate order
-        set_gre = [com_fail_rob_nbh_pos; fail_rob_nbh_pos];
-        Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
-        h_gre_1 =  h_compute_config(set_gre, t_box, delta, R_x, Rob_sen_rads(Rob_active_lab));
-        robots_requested = robots_requested + sum(Rob_sell);
+        set_gre_t = [com_fail_rob_nbh_pos; fail_rob_nbh_pos_t];
+        Rob_active_pos_t = [com_fail_rob_nbh_pos; fail_rob_nbh_pos_t];
+        Rob_active_lab_t = [com_fail_rob_nbh; fail_rob_nbh_t];
+        h_gre_1 =  h_compute_config(set_gre_t, t_box, delta, R_x,...
+            Rob_sen_rads(Rob_active_lab_t));
+        robots_requested = robots_requested + sum(Rob_sel);
     end
    prob3_robots(s) = robots_requested;
 end

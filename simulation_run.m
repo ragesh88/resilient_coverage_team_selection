@@ -193,6 +193,7 @@ hold on
 for i = 1:length(Rob_active_lab)
     text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
 end
+rectangle('Position',[ b_box(1,1) b_box(2,1) b_box(1,2)-b_box(1,1) b_box(2,2)-b_box(2,1)])
 
 [h_gre_1, ~ ] =  h_compute_config(set_gre, t_box, delta, R_x, Rob_sen_rads(Rob_active_lab));
 
@@ -222,6 +223,7 @@ hold on
 for i = 1:length(Rob_active_lab)
     text(set_gre(i,1),set_gre(i,2), num2str(Rob_active_lab(i)));
 end
+rectangle('Position',[ b_box(1,1) b_box(2,1) b_box(1,2)-b_box(1,1) b_box(2,2)-b_box(2,1)])
 
 % %% Writing data to file
 % % set the outputs paths
