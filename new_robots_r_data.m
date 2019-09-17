@@ -1,7 +1,7 @@
 %% This script generates the data to study number robots requested with respect 
 % to change in radius of region.
 
-clc
+% clc
 % clearvars
 close all
 
@@ -30,7 +30,7 @@ env_y = env_min_y:delta:env_max_y;
 % tuning parameter
 omega = 2; % hoops
 % radius_tune = 10; % radius to consider for tuning
-radius_tune_range = 5:5:env_size; % radius to consider for tuning
+radius_tune_range = 10:5:20; % radius to consider for tuning
 % coverage_thres = 190;
 
 % realiability parameters

@@ -3,7 +3,7 @@
 clc
 clearvars
 % number of trails to be done
-coverage_thres = 220;
+coverage_thres = 240;
 no_of_trails = 10;
 % output folder path
 out_fldr_pth = '/media/ragesh/Disk1/data/resilient_coverage/robots_vs_r/';
@@ -22,7 +22,6 @@ subFolders = files(dirFlags);
 trail_no_srt = length(subFolders) + 1;
 
 for trail = trail_no_srt:no_of_trails
-    fprintf('starting trail: %d',trail);
     new_robots_r_data;
     % make the directory to saving the data
     new_out_folder = [out_fldr_pth 'trail_' num2str(trail)];
@@ -64,5 +63,5 @@ for trail = trail_no_srt:no_of_trails
     % write the required data to csv files
     csvwrite([new_out_folder '/radius_tune_range.csv'],  radius_tune_range);
     csvwrite([new_out_folder  '/robots.csv'], prob3_robots);
-    fprintf('finished trail: %d',trail);
+    
 end
