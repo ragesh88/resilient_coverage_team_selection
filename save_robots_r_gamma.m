@@ -2,11 +2,13 @@
 % coverage_thresh Trail_#trail number'
 clc
 clearvars
+% global gamma
 % number of trails to be done
-coverage_thres = 200;
 no_of_trails = 10;
+gamma = 1.2;
+coverage_thres = gamma*100;
 % output folder path
-out_fldr_pth = '/media/ragesh/Disk1/data/resilient_coverage/robots_vs_r/';
+out_fldr_pth = '/media/ragesh/Disk1/data/resilient_coverage/robots_vs_r/gamma/';
 out_fldr_pth = [out_fldr_pth num2str(coverage_thres) '/'];
 if ~exist(out_fldr_pth, 'dir')
     mkdir(out_fldr_pth);
@@ -22,8 +24,8 @@ subFolders = files(dirFlags);
 trail_no_srt = length(subFolders) + 1;
 
 for trail = trail_no_srt:no_of_trails
-    fprintf('starting trail: %d',trail);
-    new_robots_r_data;
+    fprintf('\nstarting trail: %d',trail);
+    new_robots_r_data_gamma;
     % make the directory to saving the data
     new_out_folder = [out_fldr_pth 'trail_' num2str(trail)];
     mkdir(new_out_folder);
@@ -58,7 +60,7 @@ for trail = trail_no_srt:no_of_trails
     fprintf(readmefileid,'-Design area : %f\n', desired_area);
     fprintf(readmefileid,'-Sensing decay factor : %f\n', lambda);   
     fprintf(readmefileid,'-Base coverage : %f\n', base_coverage);  
-    fprintf(readmefileid,'-Coverage Threshold: %f\n', coverage_thres);  
+    fprintf(readmefileid,'-Coverage parameter: %f\n', gamma);  
     fclose(readmefileid);
     
     % write the required data to csv files
