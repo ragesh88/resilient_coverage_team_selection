@@ -21,5 +21,5 @@ figure,
 % figure,
 
 boxplot(rob_data(:,2:end), radius(2:end))
-xlabel('bounding box size L','FontSize',15,'FontWeight','bold');
-ylabel('number of robots','FontSize',15,'FontWeight','bold');
+xlabel('bounding box size L','FontSize',15);
+ylabel('number of robots','FontSize',15);

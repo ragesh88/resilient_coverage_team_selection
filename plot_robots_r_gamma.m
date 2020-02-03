@@ -3,7 +3,8 @@
 data_fldr = '/media/ragesh/Disk1/data/resilient_coverage/robots_vs_r/gamma/';
 
 % different gamma values used 
-gammas100 = [51 75 100 120];
+% gammas100 = [51 75 100 120];
+gammas100 = [51 120];
 % number of trails generated
 trails = 10;
 col = 'brgk';
@@ -31,11 +32,18 @@ for k =1:length(gammas100)
     ypos = rob_data_75 - rob_data_median;
     yneg = rob_data_median - rob_data_25;
 %     plot(radius,rob_data_median);
-    figure
-    plot(radius, rob_data_mean);
+%     figure
+    plot(radius, rob_data_mean, col(k));
+    
 %      errorbar(radius, rob_data_median,yneg,ypos,'o','MarkerSize',6,...
 %     'MarkerEdgeColor',col(k),'MarkerFaceColor',col(k),'LineWidth',2);
 end
-
-
-
+% legend(['\gamma =',num2str(gammas100(1))],...
+%     ['\gamma =',num2str(gammas100(2))],...
+%     ['\gamma =',num2str(gammas100(3))],...
+%     ['\gamma =',num2str(gammas100(4))],'FontSize',15);
+legend(['\gamma =',num2str(gammas100(1)/100)],...
+    ['\gamma =',num2str(gammas100(2)/100)],...
+    'FontSize',15);
+xlabel('Bounding box size L','FontSize',15);
+ylabel('Number of robots','FontSize',15);

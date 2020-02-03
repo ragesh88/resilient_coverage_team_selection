@@ -5,7 +5,7 @@ clearvars
 % global gamma
 % number of trails to be done
 no_of_trails = 10;
-radius_tune_range = [5 10 15];
+radius_tune_range = [5 10 15 20];
 % output folder path
 out_fldr_pth_ = '/media/ragesh/Disk1/data/resilient_coverage/robots_vs_coverage/';
 
