@@ -1,6 +1,6 @@
 % 
 
-function [Rob_active_lab,Rob_active_pos, b_box] = exp_init_coord(A_n)
+function [Rob_active_pos, b_box] = exp_init_coord(A_n)
 %the function computes the initial coordinates for the robot experiment
 %   Detailed explanation goes here
 % A_n
@@ -42,9 +42,9 @@ b_box = [env_x(1) env_x(end)
 % update the list of available robots
 % Rob_pool = Rob_pool - Rob_sel;
 % update the list of active robots
-Rob_active = Rob_sel;
+% Rob_active = Rob_sel;
 % labels of the active robots
-Rob_active_lab = find(Rob_active);
+% Rob_active_lab = find(Rob_active);
 % positions of active robots
 Rob_active_pos = set_gre;
 
