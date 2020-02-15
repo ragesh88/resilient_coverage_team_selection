@@ -34,9 +34,6 @@ else
 
 end
 
-Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
-
-
 
 end
 

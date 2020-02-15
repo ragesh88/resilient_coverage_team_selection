@@ -30,7 +30,9 @@ function plots(set, t_box, delta, h_pos)
 
     % plot probability map
     plot(prob_90(:,1), prob_90(:,2), 'bo'); hold on
-    plot(prob_50(:,1), prob_50(:,2), 'go'); hold on
+    if ~isempty(prob_50)
+        plot(prob_50(:,1), prob_50(:,2), 'go'); hold on
+    end
 
     % plot sensor positions
     plot(set(:,1), set(:,2), 'ro', 'MarkerFaceColor', 'r'); hold on
