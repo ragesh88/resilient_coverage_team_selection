@@ -56,7 +56,7 @@ for i_1 = 1:A_n-2
     
     fail_rob_label = Rob_active_lab(indx);
     Rob_active(fail_rob_label) = 0;
-1
+
     fail_rob_pos = Rob_active_pos(indx,:);
     
     % compute the bounding box coordinates
@@ -94,11 +94,13 @@ for i_1 = 1:A_n-2
     plot(fail_rob_pos(1), fail_rob_pos(2),'b*')       
     
     % generate trajectory for the robots in the failed neighbourhood
-    curdir = pwd; % take note of current folder
-    cd('../../../crazyswarm-planning'); % change to that folder
-    traj_resilent_cvrge_exp(data_pth, fail_rob_nbh, fail_rob_nbh_pos_old, ...
-        fail_rob_nbh_pos_new)
-    cd(curdir);
+    if (~isempty(fail_rob_nbh))        
+        curdir = pwd; % take note of current folder
+        cd('../../crazyswarm-planning'); % change to that folder
+        traj_resilent_cvrge_exp(data_pth, fail_rob_nbh, fail_rob_nbh_pos_old, ...
+            fail_rob_nbh_pos_new)
+        cd(curdir);
+    end
     
    
     
@@ -118,11 +120,7 @@ for i_1 = 1:A_n-2
     % plot the new set of coordinates
     plot(fail_rob_pos(1), fail_rob_pos(2),'b*')       
     
-    % generate trajectory for the robots in the failed neighbourhood
-    curdir = pwd; % take note of current folder
-    cd('../../../'); % change to that folder
-    traj_resilent_cvrge_exp(data_pth, fail_rob_nbh, fail_rob_nbh_pos_old, ...
-        fail_rob_nbh_pos_new)
+   
     
 
     % compute the new coverage values
