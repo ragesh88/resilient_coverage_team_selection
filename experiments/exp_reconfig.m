@@ -19,18 +19,23 @@ exp_rad_tune;
 
 % local reconfiguration code
 % solve the greedy algorithm to place the robots
+
 if ~isempty(fail_rob_nbh)
 [fail_rob_nbh_pos, ~, prob_pos_gre] = gre_place(fail_rob_nbh, R_x, delta,...
     b_box, Rob_sen_rads, com_fail_rob_nbh, com_fail_rob_nbh_pos);
 
 % rearrange the active robot set to match the ones in the coordinate order
 set_gre = [com_fail_rob_nbh_pos; fail_rob_nbh_pos];
+
 % Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
 else
     set_gre = com_fail_rob_nbh_pos;
 %     Rob_active_lab = com_fail_rob_nbh;
 
 end
+
+Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
+
 
 
 end
