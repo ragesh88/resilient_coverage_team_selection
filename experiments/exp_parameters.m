@@ -4,7 +4,9 @@
 global lambda com_range
 
 
-
+addpath('..') 
+% data path to store trajectories
+data_pth = '/media/ragesh/Disk1/data/resilient_coverage/exp/';
 % tuning parameter
 omega = 2; % hoops
 radius_tune = 0.5; % radius to consider for tuning
