@@ -34,6 +34,12 @@ function [gre_set, h, prob_pos] = gre_place(Rob_labels, R_x, delta,...
         % coordination (i,j)
         for i = 1:env_x_size
             for j = 1:env_y_size
+               % check if this position is taken
+               if ~isempty([pre_set_pos; gre_set]) ...
+                       && any(ismembertol([pre_set_pos; gre_set],...
+                       [env_x_range(i),env_y_range(j)],'ByRows',true))
+                   continue;
+               end
 %                 [k,i,j]
                 % if (i,j) is not inside obstacle
                 if ~is_in_obstacle(env_x_range(i),env_y_range(j))
