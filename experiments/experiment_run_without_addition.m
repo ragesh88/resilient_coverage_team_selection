@@ -13,14 +13,14 @@ global lambda com_range
 
 % simulation parameters
 % number of robots in the selection pool
-A_n = 30;
+A_n = 10;
 % the vector indicating the available robots
 Rob_pool = ones(A_n,1);
 
 % tuning parameter
 omega = 2; % hoops
-radius_tune = 10; % radius to consider for tuning
-coverage_thres = 20;
+radius_tune = .5; % radius to consider for tuning
+coverage_thres = 0;
 
 % realiability parameters
 % generate mean failure time for all robots
@@ -45,19 +45,19 @@ Rob_costs = max_cost*MTTFs/max(MTTFs);
 budget = 500;
 
 % environment parameters
-env_size = 30; % environment size
-env_min_x = 0;
-env_min_y = 0;
-env_max_x = 30;
-env_max_y = 30;
+env_size = 4; % environment size
+env_min_x = -2;
+env_min_y = -2;
+env_max_x = 2;
+env_max_y = 2;
 R_x = 1; % unifrom density 
-delta = 2; % discretization parameter
+delta = 0.25; % discretization parameter
 domain_area = env_size^2;
 env_x = env_min_x:delta:env_max_x;
 env_y = env_min_y:delta:env_max_y;
 
 % area covered by each robot
-max_area = 200;
+max_area = 5;
 Rob_areas = max_area *MTTFs/max(MTTFs);
 % sensing radius of the robots
 Rob_sen_rads = sqrt(Rob_areas/pi);
@@ -75,11 +75,11 @@ l_R_vals = -log(1-Rob_vals);
 l_alpha = -log(alpha);
 
 % solve the MILP to select the robots
-[info, Rob_sel] = prob1_MILP(Rob_costs,Rob_areas,Rob_vals,budget,...
-    alpha,domain_area);
+% [info, Rob_sel] = prob1_MILP(Rob_costs,Rob_areas,Rob_vals,budget,...
+%     alpha,domain_area);
 
 % the set containing the selected robot labels
-Rob_sel_labels = find(Rob_sel);
+Rob_sel_labels = find(Rob_pool);
 
 
 % bounding box of the domain
@@ -92,39 +92,15 @@ b_box = [env_x(1) env_x(end)
     b_box, Rob_sen_rads,[],[]);
 
 % update the list of available robots
-Rob_pool = Rob_pool - Rob_sel;
+% Rob_pool = Rob_pool - Rob_sel;
 % update the list of active robots
-Rob_active = Rob_sel;
+Rob_active = Rob_pool;
 % labels of the active robots
 Rob_active_lab = find(Rob_active);
 % positions of active robots
 Rob_active_pos = set_gre;
 
-% construct the graph from the robots 
-% adjacency matrix
-% adj = zeros(length(Rob_sel_labels));
-% nodenames = cell(length(Rob_sel_labels),1);
-% for i = 1:length(Rob_sel_labels)
-%     nodenames{i} = num2str(Rob_sel_labels(i));
-% end
-% 
-% % construct the adjacent matrix
-% for i = 1:length(Rob_sel_labels)
-%     for j = i+1:length(Rob_sel_labels)
-%         % compute the distance between the robots 
-%         dist = norm(set_gre(i,:) - set_gre(j,:));
-%         % communication radius sum
-%         max_com = com_range;
-%         if dist <= max_com
-%             adj(i,j) = dist;
-%             adj(j,i) = dist;            
-%         end
-%     end
-% end
-% % unweighted adjacency matrix
-% adj_u = double(adj>0);
-% 
-% C_graph = graph(adj,nodenames);
+
 [~, h_pos] = h_compute_config(set_gre, b_box, delta, R_x,...
     Rob_sen_rads(Rob_sel_labels));
 plots(set_gre, b_box, delta, h_pos);

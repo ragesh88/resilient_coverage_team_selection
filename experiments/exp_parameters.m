@@ -4,11 +4,13 @@
 global lambda com_range
 
 
-
+addpath('..') 
+% data path to store trajectories
+data_pth = '/media/ragesh/Disk1/data/resilient_coverage/exp/';
 % tuning parameter
 omega = 2; % hoops
-radius_tune = 10; % radius to consider for tuning
-coverage_thres = 0.20;
+radius_tune = 0.5; % radius to consider for tuning
+% coverage_thres = 0.20;
 
 % realiability parameters
 % generate mean failure time for all robots
@@ -39,13 +41,13 @@ env_min_y = -2;
 env_max_x = 2;
 env_max_y = 2;
 R_x = 1; % unifrom density 
-delta = 2; % discretization parameter
+delta = 0.25; % discretization parameter
 domain_area = env_size^2;
 env_x = env_min_x:delta:env_max_x;
 env_y = env_min_y:delta:env_max_y;
 
 % area covered by each robot
-max_area = 0.5;
+max_area = 5;
 Rob_areas = max_area *MTTFs/max(MTTFs);
 % sensing radius of the robots
 Rob_sen_rads = sqrt(Rob_areas/pi);
