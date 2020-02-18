@@ -4,9 +4,21 @@ clc
 clearvars
 close all
 
-A_n = 10;
+A_n = 7;
 
 exp_parameters;
+
+% data path to store trajectories
+data_pth = '/media/ragesh/Disk1/data/resilient_coverage/exp/';
+
+% compute the trail number
+files = dir(data_pth);
+% Get a logical vector that tells which is a directory.
+dirFlags = [files.isdir] & ~strcmp({files.name},'.')...
+    & ~strcmp({files.name},'..');
+folder_name = num2str(length(find(dirFlags))+1);
+data_pth = [data_pth '/' folder_name '/'];
+mkdir(data_pth);
 
 % compute the initial set of coordinates 
 [Rob_active_pos, b_box] = exp_init_coord(A_n);
@@ -97,8 +109,14 @@ for i_1 = 1:A_n-2
     if (~isempty(fail_rob_nbh))        
         curdir = pwd; % take note of current folder
         cd('../../crazyswarm-planning'); % change to that folder
-        traj_resilent_cvrge_exp(data_pth, fail_rob_nbh, fail_rob_nbh_pos_old, ...
-            fail_rob_nbh_pos_new)
+        % padd the coordinates with extra dimensions
+        aug_fail_rob_nbh_pos_old = [fail_rob_nbh_pos_old ...
+            1.5*ones(length(fail_rob_nbh),1)];
+        aug_fail_rob_nbh_pos_new = [fail_rob_nbh_pos_new ...
+            1.5*ones(length(fail_rob_nbh),1)];
+        traj_resilent_cvrge_exp(data_pth, fail_rob_nbh, ...
+            aug_fail_rob_nbh_pos_old, ...
+            aug_fail_rob_nbh_pos_new)
         cd(curdir);
     end
     
