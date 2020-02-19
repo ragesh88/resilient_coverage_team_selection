@@ -7,7 +7,7 @@ global lambda com_range
 addpath('..') 
 % tuning parameter
 omega = 2; % hoops
-radius_tune = 0.5; % radius to consider for tuning
+radius_tune = 2; % radius to consider for tuning
 % coverage_thres = 0.20;
 
 % realiability parameters

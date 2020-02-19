@@ -17,7 +17,7 @@ files = dir(data_pth);
 dirFlags = [files.isdir] & ~strcmp({files.name},'.')...
     & ~strcmp({files.name},'..');
 folder_name = num2str(length(find(dirFlags))+1);
-data_pth = [data_pth '/' folder_name '/'];
+data_pth = [data_pth folder_name '/'];
 mkdir(data_pth);
 
 % compute the initial set of coordinates 
@@ -106,7 +106,7 @@ for i_1 = 1:A_n-2
     plot(fail_rob_pos(1), fail_rob_pos(2),'b*')       
     
     % generate trajectory for the robots in the failed neighbourhood
-    if (~isempty(fail_rob_nbh))        
+    if (length(fail_rob_nbh)>1)        
         curdir = pwd; % take note of current folder
         cd('../../crazyswarm-planning'); % change to that folder
         % padd the coordinates with extra dimensions
@@ -116,7 +116,8 @@ for i_1 = 1:A_n-2
             1.5*ones(length(fail_rob_nbh),1)];
         traj_resilent_cvrge_exp(data_pth, fail_rob_nbh, ...
             aug_fail_rob_nbh_pos_old, ...
-            aug_fail_rob_nbh_pos_new)
+            aug_fail_rob_nbh_pos_new,...
+            b_box)
         cd(curdir);
     end
     
