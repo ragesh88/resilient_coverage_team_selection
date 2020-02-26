@@ -1,4 +1,4 @@
-function [Rob_active_lab, Rob_active_pos] = exp_inter_traj(A_n, radius_tune,...
+function [fail_rob_nbh, com_fail_rob_nbh] = exp_inter_traj(A_n, radius_tune,...
         indx, Rob_active_lab, Rob_active_pos, data_pth)
 %exp_inter_traj This function takes the values of the intermediate
 %coordinates and generates the coordinates between them 
@@ -18,10 +18,10 @@ function [Rob_active_lab, Rob_active_pos] = exp_inter_traj(A_n, radius_tune,...
     fail_rob_nbh_pos_old = Rob_active_pos(...
         ismember(Rob_active_lab,fail_rob_nbh),:);
     
-    Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
+%     Rob_active_lab = [com_fail_rob_nbh; fail_rob_nbh];
     
     fail_rob_nbh_pos_new = set_gre(end-length(fail_rob_nbh)+1:end,:);
-    Rob_active_pos = set_gre;
+%     Rob_active_pos = set_gre;
   
  % generate trajectory for the robots in the failed neighbourhood
     if (~isempty(fail_rob_nbh))        
