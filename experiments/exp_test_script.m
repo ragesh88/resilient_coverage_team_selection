@@ -86,8 +86,12 @@ for i_1 = 1:A_n-2
     end
     
     
-    [set_gre,com_fail_rob_nbh, fail_rob_nbh] = exp_reconfig(A_n, radius_tune,...
+    [set_gre,com_fail_rob_nbh, fail_rob_nbh,b_box_1] = exp_reconfig(A_n, radius_tune,...
         indx, Rob_active_lab, Rob_active_pos);
+    
+    err = b_box(:) - b_box_1(:);
+    
+    assert(all(err == 0))
     
     % gather the previous positions of the robots in the failed 
     % neighbourhood

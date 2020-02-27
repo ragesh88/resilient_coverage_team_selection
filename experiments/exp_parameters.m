@@ -4,7 +4,7 @@
 global lambda com_range
 
 
-addpath('..') 
+
 % tuning parameter
 omega = 2; % hoops
 radius_tune = 2; % radius to consider for tuning
@@ -33,11 +33,11 @@ Rob_costs = max_cost*MTTFs/max(MTTFs);
 budget = 500;
 
 % environment parameters
-env_size = 4; % environment size
-env_min_x = -2;
-env_min_y = -2;
-env_max_x = 2;
-env_max_y = 2;
+env_size = 3; % environment size
+env_min_x = -1.5;
+env_min_y = -1.5;
+env_max_x = 1.5;
+env_max_y = 1.5;
 R_x = 1; % unifrom density 
 delta = 0.25; % discretization parameter
 domain_area = env_size^2;
